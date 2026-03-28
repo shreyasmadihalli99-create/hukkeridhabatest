@@ -238,8 +238,8 @@
         <div id="items-list"></div>
 
         <div class="cart-panel" id="cart-footer">
-            <input type="text" id="c-name" class="form-input" placeholder="Your Full Name" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')">
-            <input type="tel" id="c-phone" class="form-input" placeholder="Mobile Number" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            <input type="text" id="cust-name" class="form-input" placeholder="Your Full Name" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')">
+            <input type="tel" id="cust-phone" class="form-input" placeholder="Mobile Number" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             
             <div style="border-top: 1px dashed #ccc; padding-top: 10px; margin-bottom: 10px;">
                 <div class="fee-row"><span>Convenience Fee</span><span>₹5</span></div>
@@ -248,14 +248,15 @@
 
             <div style="display:flex; justify-content:space-between; font-weight:900; font-size:1.4rem; margin: 15px 0;">
                 <span>Grand Total:</span>
-                <span style="color:var(--red);">₹<span id="final-total">0</span></span>
+                <span style="color:var(--red);">₹<span id="cart-grand-total">0</span></span>
             </div>
             <button id="loc-btn" class="wp-btn" style="background: var(--orange);" onclick="getLocation()">📍 Share Location to Order</button>
-            <button id="confirm-btn" class="wp-btn" onclick="sendToGoogleForm()" style="display: none;">Confirm Order</button>
+            <button id="confirm-btn" class="wp-btn" onclick="checkoutOrder()" style="display: none;">Confirm Order</button>
         </div>
     </main>
 
 <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx2CcnPwPfW3lFfxQKf7x0-oarxx28K4K2INt8yFAl1d5hwdCwJpITJdFYJxrOuDwDm/exec";
     let cart = {};
     let userLocationURL = ""; 
     const CONVENIENCE_FEE = 5;
@@ -336,7 +337,6 @@
         }
     };
 
-    // --- ADMIN LOGIC ---
     function openAdmin() {
         if (prompt("Enter Secret Code:") === "20106669") {
             const list = document.getElementById('admin-list');
@@ -362,7 +362,6 @@
         localStorage.setItem('hukkeri_stock', JSON.stringify(disabledItems));
     }
 
-    // --- MENU LOGIC ---
     function openMenu() {
         document.getElementById('hero-section').classList.add('hide');
         setTimeout(() => {
@@ -424,16 +423,14 @@
             subtotal += (cart[key].q * cart[key].p); 
         }
         
-        // Final Total includes Subtotal + Convenience + Delivery
         let finalGrandTotal = subtotal > 0 ? (subtotal + CONVENIENCE_FEE + DELIVERY_CHARGE) : 0;
-        
-        document.getElementById('final-total').innerText = finalGrandTotal;
+        document.getElementById('cart-grand-total').innerText = finalGrandTotal;
         document.getElementById('cart-footer').classList.toggle('active', active > 0);
     }
 
     function getLocation() {
-        const name = document.getElementById('c-name').value;
-        const phone = document.getElementById('c-phone').value;
+        const name = document.getElementById('cust-name').value;
+        const phone = document.getElementById('cust-phone').value;
         if(!name || phone.length < 10) return alert("Please enter name and mobile number first!");
         const locBtn = document.getElementById('loc-btn');
         locBtn.innerText = "Accessing GPS...";
@@ -452,42 +449,48 @@
         }
     }
 
-    async function sendToGoogleForm() {
-        const name = document.getElementById('c-name').value;
-        const phone = document.getElementById('c-phone').value;
-        const total = document.getElementById('final-total').innerText;
-        
-        let subtotal = 0;
-        let orderDetails = `Name: ${name} | Phone: ${phone}\nLocation: ${userLocationURL}\n\nOrder:\n`;
-        for(let k in cart) { 
-            orderDetails += `- ${k} (x${cart[k].q})\n`; 
-            subtotal += (cart[k].q * cart[k].p);
-        }
-        
-        orderDetails += `\nSubtotal: ₹${subtotal}`;
-        orderDetails += `\nConvenience Fee: ₹${CONVENIENCE_FEE}`;
-        orderDetails += `\nDelivery Charge: ₹${DELIVERY_CHARGE}`;
+    async function checkoutOrder() {
+        const name = document.getElementById('cust-name').value.trim();
+        const phone = document.getElementById('cust-phone').value.trim();
 
-        const formID = "1FAIpQLSfYGXB2Lim7wtiFCYy8U7MtV9DN9X2Tm7zSkx-qYxPLSLRcUg";
-        const baseURL = `https://docs.google.com/forms/d/e/${formID}/formResponse`;
-        
-        const formData = new URLSearchParams();
-        formData.append('entry.1304197339', orderDetails);   
-        formData.append('entry.248975380', total);          
-        formData.append('entry.164020655', "Hukkeri Dhaba"); 
+        if(!name || phone.length < 10) return alert("Fill Name & Mobile.");
+
+        const grandTotal = document.getElementById('cart-grand-total').innerText;
+
+        let orderSummary = "";
+        for (let k in cart) {
+            if(cart[k].q > 0) {
+                orderSummary += `${k}(x${cart[k].q}), `;
+            }
+        }
+
+        const payload = {
+            hotel: "Hukkeri Dhaba",
+            name: name,
+            phone: phone,
+            items: orderSummary.slice(0, -2),
+            total: "₹" + grandTotal,
+            location: userLocationURL
+        };
 
         const btn = document.getElementById('confirm-btn');
         btn.innerText = "Processing...";
         btn.disabled = true;
 
         try {
-            await fetch(baseURL, { method: 'POST', mode: 'no-cors', body: formData });
-            alert("Order Confirmed!");
-            location.reload(); 
-        } catch (error) {
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(payload)
+            });
+
+            alert("Order Confirmed! Your order has been sent.");
+            location.reload();
+
+        } catch (e) {
             alert("Error. Try again.");
-            btn.innerText = "Confirm Order";
             btn.disabled = false;
+            btn.innerText = "Confirm Order";
         }
     }
 </script>
