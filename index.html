@@ -162,33 +162,75 @@
     let disabledItems = JSON.parse(localStorage.getItem('hukkeri_stock')) || {};
     
     const fullMenuData = {
-        "Chicken Starters": {
+         "Chicken Starters": {
             img: "https://images.unsplash.com/photo-1562967914-608f82629710?w=800&q=80",
-            items: [{n: "Chicken 65", p: 100}, {n: "Chicken Dry", p: 170}, {n: "Chicken Kabab", p: 170}, {n: "Chicken Sukka", p: 140}, {n: "Chicken Lollipop", p: 120}, {n: "Chicken Tangadi", p: 110}]
+            items: [
+                {n: "Chicken 65", p: 100}, {n: "Chicken Dry", p: 170}, 
+                {n: "Chicken Kabab", p: 170}, {n: "Chicken Sukka", p: 140},
+                {n: "Chicken Lollipop", p: 120}, {n: "Chicken Tangadi", p: 110}
+            ]
         },
         "Dum Biryani": {
             img: "https://tse3.mm.bing.net/th/id/OIP.ZqOM4pyTyudhToF13jO9QQHaE7?pid=Api&P=0&h=180",
-            items: [{n: "Chicken Biryani Half", p: 130}, {n: "Chicken Biryani Full", p: 180}, {n: "Egg Biryani Full", p: 160}, {n: "Veg Biryani Special", p: 170}]
+            items: [
+                {n: "Chicken Biryani Half", p: 130}, {n: "Chicken Biryani Full", p: 180},
+                {n: "Egg Biryani Full", p: 160}, {n: "Veg Biryani Special", p: 170}
+            ]
         },
         "Non-Veg Handi": {
             img: "https://img.freepik.com/premium-photo/dum-handi-chicken-biryani-is-prepared-earthen-clay-pot-called-haandi-popular-indian-non-vegetarian-food_466689-52225.jpg?w=1380",
-            items: [{n: "Chicken Masala Full", p: 550}, {n: "Chicken Kolhapuri", p: 580}, {n: "Chicken Mughlai", p: 600}, {n: "Chicken Handi Half", p: 350}]
+            items: [
+                {n: "Chicken Masala Full", p: 550}, {n: "Chicken Kolhapuri", p: 580},
+                {n: "Chicken Mughlai", p: 600}, {n: "Chicken Handi Half", p: 350}
+            ]
         },
         "Veg Starters": {
             img: "https://www.indianveggiedelight.com/wp-content/uploads/2017/06/gobi-manchurian-featured.jpg",
-            items: [{n: "Masala Senga", p: 10}, {n: "Maharaja Senga", p: 30}, {n: "Rosted Papad", p: 20}, {n: "Oil Papad", p: 25}, {n: "Masala Papad", p: 35}, {n: "Finger Chipes", p: 90}, {n: "Onion Pakada", p: 90}, {n: "Gobi Manchuri", p: 90}, {n: "Kaju Fry", p: 90}]
+            items: [
+                {n: "Masala Senga", p: 10}, {n: "Maharaja Senga", p: 30}, 
+                {n: "Rosted Papad", p: 20}, {n: "Oil Papad", p: 25},
+                {n: "Masala Papad", p: 35}, {n: "Finger Chipes", p: 90},
+                {n: "Onion Pakada", p: 90}, {n: "Gobi Manchuri", p: 90},
+                {n: "Kaju Fry", p: 90}
+            ]
         },
         "Veg Dish": {
             img: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&q=80",
-            items: [{n: "Dal Fry", p: 90}, {n: "Dal Kolhapuri", p: 110}, {n: "Dal Tabaka", p: 120}, {n: "Akka Masur", p: 90}, {n: "Akka Masur Kolhapuri", p: 100}, {n: "Mix Veg", p: 120}, {n: "Mix Veg Kolhapuri", p: 130}, {n: "Kaju Curry", p: 160}, {n: "Paneer Masala", p: 160}, {n: "Kaju Paneer Masala", p: 180}, {n: "Channa Masala", p: 100}]
+            items: [
+                {n: "Dal Fry", p: 90}, {n: "Dal Kolhapuri", p: 110},
+                {n: "Dal Tabaka", p: 120}, {n: "Akka Masur", p: 90},
+                {n: "Akka Masur Kolhapuri", p: 100}, {n: "Mix Veg", p: 120},
+                {n: "Mix Veg Kolhapuri", p: 130}, {n: "Mix Veg Makhanwala", p: 130},
+                {n: "Mix Veg Hyderabadi", p: 130}, {n: "Kaju Curry", p: 160},
+                {n: "Kaju Kolhapuri", p: 170}, {n: "Kaju Makhanwala", p: 170},
+                {n: "Paneer Masala", p: 160}, {n: "Paneer Kolhapuri", p: 170},
+                {n: "Paneer Makhanwala", p: 170}, {n: "Paneer Tikka Masala", p: 180},
+                {n: "Kaju Paneer Masala", p: 180}, {n: "Palak Paneer", p: 170},
+                {n: "Matter Paneer", p: 160}, {n: "Matter Masala", p: 110},
+                {n: "Green Pis Masala", p: 110}, {n: "Baigen Masala", p: 100},
+                {n: "Shimla Masala", p: 100}, {n: "Capsicum Masala", p: 100},
+                {n: "Channa Masala", p: 100}
+            ]
         },
         "Roti Items": {
             img: "https://images.unsplash.com/photo-1593504049359-ef163f0356b8?w=800&q=80",
-            items: [{n: "Tanduri Roti", p: 15}, {n: "Butter Roti", p: 25}, {n: "Butter Naan", p: 40}, {n: "Chapati", p: 15}, {n: "Sajji Rotti", p: 10}]
+            items: [
+                {n: "Tanduri Roti", p: 15}, {n: "Pepar Roti", p: 25},
+                {n: "Butter Roti", p: 25}, {n: "Butter Kulach", p: 35},
+                {n: "Butter Naan", p: 40}, {n: "Kerala Paroota (Ready)", p: 20},
+                {n: "Chapati", p: 15}, {n: "Sajji Rotti", p: 10},
+                {n: "Gonjal Rotti", p: 10}
+            ]
         },
         "Rice": {
             img: "https://images.unsplash.com/photo-1512058560366-cd2427ff06b3?w=800&q=80",
-            items: [{n: "Plane Rice-Full", p: 60}, {n: "Jeera Rice-Full", p: 100}, {n: "Masala Rice-Full", p: 120}, {n: "Curd Rice Full Only", p: 120}]
+            items: [
+                {n: "Plane Rice-Half", p: 30}, {n: "Plane Rice-Full", p: 60},
+                {n: "Jeera Rice-Half", p: 50}, {n: "Jeera Rice-Full", p: 100},
+                {n: "Masala Rice-Half", p: 60}, {n: "Masala Rice-Full", p: 120},
+                {n: "Ghee Rice-Half", p: 60}, {n: "Ghee Rice-Full", p: 120},
+                {n: "Kushka Rice-Half", p: 60}, {n: "Kushka Rice-Full", p: 120},
+                {n: "Curd Rice Full Only", p: 120}]
         }
     };
 
